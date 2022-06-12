@@ -18,49 +18,75 @@
 
 ##  1.1 NGINX Open source - Installing a Prebuilt Debian Package from an OS Repository
 
-1. Go to OSS_Web_Server and select SSH from Access menu.
+1. Go to *OSS_Web_Server* and select *SSH* from Access menu.
 
-2. After login, update the Debian repository information: `sudo apt-get update`
+2. After login, update the Debian repository information:
 
-3. Install the NGINX Open Source package: `sudo apt-get install nginx`
+    `sudo apt-get update`
 
-4. Verify the installation: `sudo nginx -v`
+3. Install the NGINX Open Source package:
 
-`nginx version: nginx/1.18.0(ubuntu)`
+    `sudo apt-get install nginx`
 
-5. Start NGINX Open Source:`sudo nginx`
+4. Verify the installation:
 
-6. Verify that NGINX Open Source is up and running: `curl -I 127.0.0.1`
+    `sudo nginx -v`
 
-```
-HTTP/1.1 200 OK.
-Server: nginx/1.18.0 (Ubuntu)
-Date: Wed, 12 Jan 2022 14:11:44 GMT
-Content-Type: text/html
-Content-Length: 612
-Last-Modified: Wed, 12 Jan 2022 14:07:56 GMT
-Connection: keep-alive
-ETag: "61dee0bc-264"
-Accept-Ranges**: bytes
-```
+   Example output:
 
-Eecute:
+   `nginx version: nginx/1.18.0(ubuntu)`
 
-`curl 127.0.0.1`
+5. Start NGINX Open Source:
 
-If NGINX is correctly installed you'll get a "*Welcome to NGINX*" page.
+   `sudo nginx`
+
+6. Verify that NGINX Open Source is up and running:
+
+    `curl -I 127.0.0.1`
+
+   Example output:
+
+   ```
+   HTTP/1.1 200 OK.
+   Server: nginx/1.18.0 (Ubuntu)
+   Date: Wed, 12 Jan 2022 14:11:44 GMT
+   Content-Type: text/html
+   Content-Length: 612
+   Last-Modified: Wed, 12 Jan 2022 14:07:56 GMT
+   Connection: keep-alive
+   ETag: "61dee0bc-264"
+   Accept-Ranges**: bytes
+   ```
+
+   Run:
+
+   `curl 127.0.0.1`
+
+   If NGINX is correctly installed you'll get a "*Welcome to NGINX*" page.
 
   
 
 ## 1.2 Execute Basic NGINX Commands
 
-1. Check the running NGINX version: `nginx -v`
+1. Check the running NGINX version:
 
-2. Test Configuration file: `sudo nginx -t`
+    `nginx -v`
 
-3. Reload nginx configuration -> needed after any change to nginx config: `sudo nginx -s reload`
-4. Show all nginx configuration `sudo nginx -T`
-5. Check nginx configuration file: `cat /etc/nginx/nginx.conf`
+2. Test Configuration file:
+
+    `sudo nginx -t`
+
+3. Reload nginx configuration -> needed after any change to nginx config:
+
+   `sudo nginx -s reload`
+
+4. Show all nginx configuration:
+
+    `sudo nginx -T`
+
+5. Check nginx configuration file:
+
+    `cat /etc/nginx/nginx.conf`
 
    
 
@@ -69,8 +95,7 @@ If NGINX is correctly installed you'll get a "*Welcome to NGINX*" page.
 > For our lab, the certificate and key are already in Web_Server_1. Otherwise you need to get the NGINX+ trial license from the F5 Sales team.
 
 1. Go to *Web_Server_1* and select *SSH* from Access menu.
-
-2. Check NGINX repo cert and key are in `/home/ubuntu`
+2. Check NGINX repo cert and key are in **/home/ubuntu**:
 
 ```bash
 $ pwd
@@ -90,7 +115,7 @@ cd /etc/ssl/nginx
 ls
 ```
 
-5. Download and add [NGINX signing key](https://nginx.org/keys/nginx_signing.key) 
+5. Download and add [NGINX signing key](https://nginx.org/keys/nginx_signing.key):
 
 ```bash
 sudo wget https://cs.nginx.com/static/keys/nginx_signing.key \
