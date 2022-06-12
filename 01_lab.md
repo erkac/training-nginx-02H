@@ -22,7 +22,9 @@
 
 2. After login, update the Debian repository information:
 
-    `sudo apt-get update`
+    ```bash
+    sudo apt-get update
+    ```
 
 3. Install the NGINX Open Source package:
 
