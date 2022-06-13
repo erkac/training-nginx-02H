@@ -31,5 +31,7 @@ server {
   }
 }
 EOF
+sudo nginx -t && sudo nginx -s reload
 echo
+
 
