@@ -28,11 +28,15 @@
 
 3. Install the NGINX Open Source package:
 
-    `sudo apt-get install nginx`
+   ```bash
+   sudo apt-get -y install nginx
+   ```
 
 4. Verify the installation:
 
-    `sudo nginx -v`
+   ```bash
+   sudo nginx -v
+   ```
 
    Example output:
 
@@ -40,29 +44,37 @@
 
 5. Start NGINX Open Source:
 
-   `sudo nginx`
+   >  Ignore the error messages if the nginx is already running.
+
+   ```bash
+   sudo nginx
+   ```
 
 6. Verify that NGINX Open Source is up and running:
 
-    `curl -I 127.0.0.1`
+   ```bash
+   curl -I 127.0.0.1
+   ```
 
    Example output:
 
    ```
-   HTTP/1.1 200 OK.
+   HTTP/1.1 200 OK
    Server: nginx/1.18.0 (Ubuntu)
-   Date: Wed, 12 Jan 2022 14:11:44 GMT
+   Date: Mon, 13 Jun 2022 07:47:57 GMT
    Content-Type: text/html
    Content-Length: 612
-   Last-Modified: Wed, 12 Jan 2022 14:07:56 GMT
+   Last-Modified: Mon, 13 Jun 2022 07:45:28 GMT
    Connection: keep-alive
-   ETag: "61dee0bc-264"
-   Accept-Ranges**: bytes
+   ETag: "62a6eb18-264"
+   Accept-Ranges: bytes
    ```
 
    Run:
 
-   `curl 127.0.0.1`
+   ```bash
+   curl 127.0.0.1
+   ```
 
    If NGINX is correctly installed you'll get a "*Welcome to NGINX*" page.
 
@@ -72,23 +84,33 @@
 
 1. Check the running NGINX version:
 
-    `nginx -v`
+   ```bash
+   nginx -v
+   ```
 
 2. Test Configuration file:
 
-    `sudo nginx -t`
+   ```bash
+   sudo nginx -t
+   ```
 
 3. Reload nginx configuration -> needed after any change to nginx config:
 
-   `sudo nginx -s reload`
+   ```bash
+   sudo nginx -s reload
+   ```
 
-4. Show all nginx configuration:
+4. Show all the nginx configuration:
 
-    `sudo nginx -T`
+   ```bash
+   sudo nginx -T
+   ```
 
-5. Check nginx configuration file:
+5. Review nginx configuration file:
 
-    `cat /etc/nginx/nginx.conf`
+   ```bash
+   cat /etc/nginx/nginx.conf
+   ```
 
    
 
@@ -97,86 +119,105 @@
 > For our lab, the certificate and key are already in Web_Server_1. Otherwise you need to get the NGINX+ trial license from the F5 Sales team.
 
 1. Go to *Web_Server_1* and select *SSH* from Access menu.
+
 2. Check NGINX repo cert and key are in **/home/ubuntu**:
 
-```bash
-$ pwd
-/home/ubuntu
-$ ls
-nginx-repo.crt  nginx-repo.key
-```
+   ```bash
+   $ pwd
+   /home/ubuntu
+   $ ls
+   nginx-repo.crt  nginx-repo.key
+   ```
 
-3. Create the `/etc/ssl/nginx` directory: `sudo mkdir /etc/ssl/nginx`
+3. Create the **/etc/ssl/nginx** directory:
 
-4. Copy the files to the `/etc/ssl/nginx/` directory:
+   ```bash
+   sudo mkdir /etc/ssl/nginx
+   ```
 
-```bash
-sudo cp nginx-repo.crt /etc/ssl/nginx/
-sudo cp nginx-repo.key /etc/ssl/nginx/
-cd /etc/ssl/nginx
-ls
-```
+4. Copy the files to the **/etc/ssl/nginx/** directory:
+
+   ```bash
+   cd 
+   sudo cp nginx-repo.crt /etc/ssl/nginx/
+   sudo cp nginx-repo.key /etc/ssl/nginx/
+   cd /etc/ssl/nginx
+   ls
+   ```
 
 5. Download and add [NGINX signing key](https://nginx.org/keys/nginx_signing.key):
 
-```bash
-sudo wget https://cs.nginx.com/static/keys/nginx_signing.key \
-  && sudo apt-key add nginx_signing.key
-```
+   ```bash
+   sudo wget https://cs.nginx.com/static/keys/nginx_signing.key \
+     && sudo apt-key add nginx_signing.key
+   ```
 
 6. Install the prerequisites packages:
 
-```bash
-sudo apt-get install apt-transport-https lsb-release ca-certificates
-```
+   ```bash
+   sudo apt-get -y install apt-transport-https lsb-release ca-certificates
+   ```
 
 7. Add the NGINX Plus repository:
 
-```bash
-printf "deb https://pkgs.nginx.com/plus/ubuntu `lsb_release -cs` nginx-plus\n" | sudo tee /etc/apt/sources.list.d/nginx-plus.list
-```
+   ```bash
+   printf "deb https://pkgs.nginx.com/plus/ubuntu `lsb_release -cs` nginx-plus\n" \
+     | sudo tee /etc/apt/sources.list.d/nginx-plus.list
+   ```
 
 8. Download the **nginx-plus** apt configuration to **/etc/apt/apt.conf.d**:
 
-```
-sudo wget -P /etc/apt/apt.conf.d https://cs.nginx.com/static/files/90pkgs-nginx
-```
+   ```bash
+   sudo wget -P /etc/apt/apt.conf.d https://cs.nginx.com/static/files/90pkgs-nginx
+   ```
 
-9. Update the repository information: `sudo apt-get update`
+9. Update the repository information:
 
-10. Install the **nginx-plus** package. Any older NGINX Plus package is automatically replaced: `sudo apt-get install -y nginx-plus`
+   ```bash
+   sudo apt-get update
+   ```
 
-11. Check the `nginx` binary version to ensure that you have NGINX Plus installed correctly: 
+10. Install the **nginx-plus** package. Any older NGINX Plus package is automatically replaced:
 
-```
-nginx -v
-nginx version: nginx/1.21.3 (nginx-plus-r25-p1)
-```
+    ```bash
+    sudo apt-get install -y nginx-plus
+    ```
 
-12. Start NGINX Plus
+11. Check the `nginx` binary version to ensure that you have NGINX Plus installed correctly:
 
-```
-$ sudo systemctl start nginx
-```
+    ```bash
+    nginx -v
+    ```
 
-13. Verify NGINX Plus is running
+    Example output:
 
-```
-$ sudo systemctl status nginx
-Active: active (running)
-```
+    `nginx version: nginx/1.21.5 (nginx-plus-r26)`
 
- Press <kbd>q</kbd> to exit
+12. Start NGINX Plus:
+
+    ```bash
+    sudo systemctl start nginx
+    ```
+
+13. Verify NGINX Plus is running:
+
+    ```bash
+    sudo systemctl status nginx
+    ```
+
+    Example output:
+
+    `Active: active (running) since Mon 2022-06-13 08:15:02 UTC; 32s ago`
+
+    Press <kbd>q</kbd> to exit, in case the output is long.
 
 14. RDP to windows jump host.
-
-- Username: **user** 
-
-- Password: **user**
+    - Username: **user**
+    - Password: **user**
 
 Open google chrome and go to the following url: http://web-server-1.com
 
-![Graphical user interface, text, application  Description automatically generated](file:////Users/klokner/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image001.png)
+<img src="img/nginx-plus-web-server-1.com.png" alt="nginx-plus-web-server-1.com" style="zoom:50%;" />
 
 If you get “*Welcome to nginx!*” then nginx plus web server is up and running!
 
