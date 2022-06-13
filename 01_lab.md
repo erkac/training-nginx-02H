@@ -212,14 +212,15 @@
     Press <kbd>q</kbd> to exit, in case the output is long.
 
 14. RDP to windows jump host.
+
     - Username: **user**
     - Password: **user**
 
-Open google chrome and go to the following url: http://web-server-1.com
+    Open google chrome and go to the following url: http://web-server-1.com
+
+    > If you get “*Welcome to nginx!*” then nginx plus web server is up and running!
 
 <img src="img/nginx-plus-web-server-1.com.png" alt="nginx-plus-web-server-1.com" style="zoom:50%;" />
-
-If you get “*Welcome to nginx!*” then nginx plus web server is up and running!
 
 
 
@@ -272,9 +273,17 @@ NGINX Plus functionality can be extended with dynamically loadable modules that 
 
  
 
-1. Install **geoip2** dynamic module in nginx plus. Go to *Web_Server_1_PLUS*: `sudo apt-get install nginx-plus-module-geoip2`
+1. Install **geoip2** dynamic module in nginx plus. Go to *Web_Server_1*:
 
-2. Open nginx.conf file: `sudo vi /etc/nginx/nginx.conf`
+   ```bash
+   sudo apt-get install nginx-plus-module-geoip2
+   ```
+
+2. Open nginx.conf file:
+
+   ```bash
+   sudo vi /etc/nginx/nginx.conf
+   ```
 
 3. Add the below two lines in the **main context** to enable **geoip2** dynamic module.
 
@@ -283,38 +292,40 @@ NGINX Plus functionality can be extended with dynamically loadable modules that 
    load_module modules/ngx_stream_geoip2_module.so;
    ```
 
-   
+4. Press <kbd>Esc</kbd> and <kbd>:wq</kbd>, then check and reload nginx configuration:
 
-4. Press <kbd>Esc</kbd> and <kbd>:wq</kbd>, then check and reload nginx configuration: `sudo  nginx -t && nginx -s reload`
+   ```bash
+   sudo nginx -t && nginx -s reload
+   ```
 
-Example output:
+   Example output:
 
-```
-nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
-nginx: configuration file /etc/nginx/nginx.conf test is successful
-```
+   ```
+   nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+   nginx: configuration file /etc/nginx/nginx.conf test is successful
+   ```
 
-You can safely ignore those errors:
+   You can safely ignore those errors:
 
-![Text  Description automatically generated](file:////Users/klokner/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image004.png)
-
-​        
+   ````
+   nginx: [alert] could not open error log file: open() "/var/log/nginx/error.log" failed (13: Permission denied)
+   ...
+   ````
 
 5. Check installed dynamic modules:
 
-```bash
-cd /etc/nginx/modules
-ls 
-```
+   ```bash
+   cd /etc/nginx/modules
+   ls
+   ```
 
- Example output:
+   Example output:
 
-```
-ngx_http_geoip2_module-debug.so
-ngx_stream_geoip2_moduledebug.so
-ngx_http_geoip2_module.so
-ngx_stream_geoip2_module.so
-```
+   ```bash
+   ubuntu@ip-10-1-1-10:/etc/nginx/modules$ ls
+   ngx_http_geoip2_module-debug.so  ngx_http_geoip2_module.so  ngx_stream_geoip2_module-debug.so  ngx_stream_geoip2_module.so
+   ubuntu@ip-10-1-1-10:/etc/nginx/modules$
+   ```
 
 
 
@@ -334,91 +345,139 @@ ngx_stream_geoip2_module.so
 
 1. Access *Web_Server_1*.
 
-2. Create an html page as `app1.html`: `sudo vi /usr/share/nginx/html/app1.html`
+2. Create an html page as **app1.html**:
+
+   ```
+   sudo vi /usr/share/nginx/html/app1.html
+   ```
 
 3. Add the below html code to the file:
 
-```html
-<!DOCTYPE html>
-<html>
-<body>
-<h1 style="background-color:DodgerBlue;">This is App1</h1>
-</body>
-</html>     
-```
+   ```html
+   <!DOCTYPE html>
+   <html>
+   <body>
+   <h1 style="background-color:DodgerBlue;">This is App1</h1>
+   </body>
+   </html>
+   ```
 
 4. Save and exist.
 
-5. Create an html page as `app2.html`: `sudo vi /usr/share/nginx/html/app2.html`
+5. Create an html page as **app2.html**:
 
-6. Add the below html code to the file
+   ```bash
+   sudo vi /usr/share/nginx/html/app2.html
+   ```
 
-```html
-<!DOCTYPE html>
-<html>
-<body>
-<h1 style="background-color:Green;">This is App2</h1>
-</body>
-</html>     
-```
+6. Add the below html code to the file:
+
+   ```html
+   <!DOCTYPE html>
+   <html>
+   <body>
+   <h1 style="background-color:Green;">This is App2</h1>
+   </body>
+   </html>
+   ```
 
 7. Save and exist.
 
-8. Rename the default configuration file: `sudo mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.bak
-9. Create a new configuration file called `web_server.conf`: `sudo vi /etc/nginx/conf.d/web_server.conf`
+8. Rename the default configuration file:
+
+   ```bash
+   sudo mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.bak
+   ```
+
+9. Create a new configuration file called **web_server.conf**:
+
+   ```bash
+   sudo vi /etc/nginx/conf.d/web_server.conf
+   ```
 
 10. Paste the following into the file:
 
-```nginx
-server {
-	listen 10.1.1.10:80;
-	server_name web-server-1.com;
-	root /usr/share/nginx/html;
-
-	#For logging
-	access_log /var/log/nginx/map.access.log combined;
-	error_log /var/log/nginx/map.error.log error;
-}
-```
+    ```nginx
+    server {
+    	listen 10.1.1.10:80;
+    	server_name web-server-1.com;
+    	root /usr/share/nginx/html;
+    
+    	#For logging
+    	access_log /var/log/nginx/map.access.log combined;
+    	error_log /var/log/nginx/map.error.log error;
+    }
+    ```
 
 11. Save and exit the file. 
 
-12. Reload nginx configuration: `sudo nginx -s reload`
+12. Reload nginx configuration:
 
-13. Go to chrome in windows jump box and use the below url: http://web-server-1.com
+    ```bash
+    sudo nginx -s reload
+    ```
 
-*You should get the nginx default page*
+13. Go to *Chrome* in *Windows Jump* box and use the below url:
 
-14. Add location directive to web-server file as follows: `sudo vi /etc/nginx/conf.d/web_server.conf`
+    ```
+    http://web-server-1.com
+    ```
 
-Then paste the following:
+    *You should get the nginx default page*
 
-```nginx
-location = /app1.html {
-	root /usr/share/nginx/html;
-}
-location = /app2.html {
- root /usr/share/nginx/html;
-}
-```
+14. Add location directive to **web_server.conf** file into `server {}` part:
 
+    ```bash
+    sudo vi /etc/nginx/conf.d/web_server.conf
+    ```
 
+    Then paste the following:
 
-The `web_server.conf` file should look like the below:
+    ```nginx
+    location = /app1.html {
+    	root /usr/share/nginx/html;
+    }
+    location = /app2.html {
+     root /usr/share/nginx/html;
+    }
+    ```
 
-![Text, letter  Description automatically generated](file:////Users/klokner/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image005.png)
+    The `web_server.conf` file should look like the below:
 
- 
+    ```nginx
+    server {
+    	listen 10.1.1.10:80;
+    	server_name web-server-1.com;
+    	root /usr/share/nginx/html;
+    
+    	#For logging
+    	access_log /var/log/nginx/map.access.log combined;
+    	error_log /var/log/nginx/map.error.log error;
+    
+    	location = /app1.html {
+    		root /usr/share/nginx/html;
+    	}
+    	location = /app2.html {
+    		root /usr/share/nginx/html;
+    	}
+    }
+    ```
 
-15. Save the configuration and exit and then reload nginx configuration: `sudo nginx -s reload`
+15. Save the configuration and exit and then reload nginx configuration:
 
-16. Now test access to the added new location. Go to chrome in windows jump host and access the following URLS:
+    ```bash
+    sudo nginx -s reload
+    ```
 
-http://web-server-1/app1.html
+16. Now test access to the added new location. Go to *Chrome* in *Windows jump* host and access the following URLS:
 
-http://web-server-1/app2.html
+    ```
+    http://web-server-1.com/app1.html
+    
+    http://web-server-1.com/app2.html
+    ```
 
- *You should get the below pages:*
+    *You should get the below pages:*
 
 ![Icon  Description automatically generated with low confidence](file:////Users/klokner/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image006.png)
 
@@ -428,62 +487,80 @@ http://web-server-1/app2.html
 
 ## 2.2 Reverse Proxy Configuration
 
-1. Backup the web_server.conf file: `sudo mv /etc/nginx/conf.d/web_server.conf /etc/nginx/conf.d/web_server.conf.bak`
+1. Backup the web_server.conf file:
 
-2. Create `rev_proxy.conf` file: 
+   ```bash
+   sudo mv /etc/nginx/conf.d/web_server.conf /etc/nginx/conf.d/web_server.conf.bak
+   ```
 
-`sudo vi /etc/nginx/conf.d/rev_proxy.conf`
+2. Create **rev_proxy.conf** file:
+
+   ```bash
+   sudo vi /etc/nginx/conf.d/rev_proxy.conf
+   ```
 
 3. Add the below configuration:
 
-```nginx
-server {
-	listen 80;
-	location /1 {
-		proxy_pass http://localhost:8080;
-	}
-
-	location /2 {
-		proxy_pass http://localhost:8081;
-	}
-}
-```
+   ```nginx
+   server {
+   	listen 80;
+   	location /1 {
+   		proxy_pass http://localhost:8080;
+   	}
+   
+   	location /2 {
+   		proxy_pass http://localhost:8081;
+   	}
+   }
+   ```
 
 4. Save, exit the configuration. 
 
-5. Create the following configuration file `app1.conf`: `sudo vi /etc/nginx/conf.d/app1.conf`
+5. Create the following configuration file **app1.conf**:
+
+   ```bash
+   sudo vi /etc/nginx/conf.d/app1.conf
+   ```
 
 6. Add the below configs:
 
-```nginx
-server {
-	listen 8080;
-	location / {
-		return 200 "I am listening on port 8080\n";
-	}
-}
-```
+   ```nginx
+   server {
+   	listen 8080;
+   	location / {
+   		return 200 "I am listening on port 8080\n";
+   	}
+   }
+   ```
 
 7. Save, exit the configuration. 
 
-8. Create the following configuration file `app2.conf`: `sudo vi /etc/nginx/conf.d/app2.conf`
+8. Create the following configuration file **app2.conf**:
+
+   ```bash
+   sudo vi /etc/nginx/conf.d/app2.conf
+   ```
 
 9. Add the below configs:
 
-```nginx
-server {
-	listen 8081;
-	location / {
-		return 200 "I am listening on port 8081\n";
-	}
-}
-```
+   ```nginx
+   server {
+   	listen 8081;
+   	location / {
+   		return 200 "I am listening on port 8081\n";
+   	}
+   }
+   ```
 
 10. Save, exit the configuration. 
 
-11. Reload nginx configuration: `sudo nginx -s reload`
+11. Reload nginx configuration:
 
-12. Go to windows jump server and run `CMD`
+    ```bash
+    sudo nginx -s reload
+    ```
+
+12. Go to windows jump server and run `cmd`
 
 13. Test the below URLs to see the behavior change using the `proxy_pass` directive:
 
@@ -513,13 +590,15 @@ server {
      -out /etc/ssl/nginx/web-server-1.crt
    ```
 
-2. Enter the values requested by `openssl` for ssl.
+2. Enter the values requested by `openssl` for the certificate:
 
    For **FQDN** enter `web-server-1.com`
 
 3. Open **ssl_test.conf**:
 
-    `sudo vim /etc/nginx/conf.d/ssl_test.conf`
+    ```bash
+    sudo vi /etc/nginx/conf.d/ssl_test.conf
+    ```
 
 4. Add a server context with listen **443** directive. Also add the ssl certificate and key locations you created earlier:
 
@@ -535,16 +614,18 @@ server {
 
 5. Save & exit. Reload nginx config:
 
-   `sudo nginx -s reload`
+   ```bash
+   sudo nginx -s reload
+   ```
 
 6. Go to chrome and go to the below URL:
 
    `https://web-server-1.com`
 
    *You should get the default NGINX page as follows:*
+   
+   ![https-nginx-plus-web-server-1.com](./img/https-nginx-plus-web-server-1.com.png)
+   
+   
 
-![Graphical user interface, text, application, email  Description automatically generated](file:////Users/klokner/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image008.png)
-
-
-
-> That is the end of Lab 2 and 101 Labs!
+That is the end of Lab 2 and 101 Labs!
