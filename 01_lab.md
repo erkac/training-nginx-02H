@@ -215,7 +215,7 @@ By the end of the lab you will be able to:
 
     > If you get “*Welcome to nginx!*” then nginx plus web server is up and running!
 
-<img src="img/nginx-plus-web-server-1.com.png" alt="nginx-plus-web-server-1.com" style="zoom:50%;" />
+<img src="./img/01_lab/nginx-plus-web-server-1.com.png" alt="nginx-plus-web-server-1.com" style="zoom:50%;" />
 
 
 
@@ -474,7 +474,7 @@ By the end of the lab you will be able to:
 
     *You should get the below pages:*
 
-    ![01_lab_app1-app2](./img/01_lab_app1-app2.png)
+    ![01_lab_app1-app2](./img/01_lab/app1-app2.png)
 
  
 
@@ -617,7 +617,7 @@ By the end of the lab you will be able to:
 
    *You should get the default NGINX page as follows:*
    
-   ![https-nginx-plus-web-server-1.com](./img/https-nginx-plus-web-server-1.com.png)
+   ![https-nginx-plus-web-server-1.com](./img/01_lab/https-nginx-plus-web-server-1.com.png)
    
    
 

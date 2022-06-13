@@ -187,23 +187,23 @@
    # www.example.com HTTP Only Redirect
    server {
    	listen 80;
-     server_name www.example.com;
+   	server_name www.example.com;
      
-     return 301 https://$host$request_uri;
+   	return 301 https://$host$request_uri;
    }
    
    # www.example.com HTTPS
    server {
    	listen 443 ssl default_server;
-     server_name www.example.com;
+   	server_name www.example.com;
      
-     # Minimum SSL Configuration
-     ssl_certificate /etc/ssl/nginx/nginx1.crt;
-     ssl_certificate_key /etc/ssl/nginx/nginx1.key;
+   	# Minimum SSL Configuration
+   	ssl_certificate /etc/ssl/nginx/nginx1.crt;
+   	ssl_certificate_key /etc/ssl/nginx/nginx1.key;
      
-     location / {
+   	location / {
    		proxy_pass http://myServers;
-     }
+   	}
    }
    ```
 
