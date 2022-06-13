@@ -46,7 +46,7 @@
    ```nginx
    server {
      listen 80;
-     server_name meta.com;
+     server_name example.com;
      root /usr/share/nginx/html;
    }
    ```
@@ -56,7 +56,7 @@
    ```nginx
    server { 
     listen 80;
-    server_name meta.com;
+    server_name example.com;
     root /usr/share/nginx/html;
     
     location / {
@@ -70,7 +70,7 @@
    ```nginx
    server {
    	listen 80;
-   	server_name meta.com;
+   	server_name example.com;
    	root /usr/share/nginx/html;
    ...
    	error_log /var/log/nginx/myServers.error.log info; 
@@ -94,7 +94,7 @@
 9. Save and reload NGINX:
 
    ```bash
-   sudo nginx -t | sudo nginx -s reload 
+   sudo nginx -t && sudo nginx -s reload 
    ```
 
    Your file should look like the below one:
@@ -109,7 +109,7 @@
    
    server {
    	listen 80;
-   	server_name meta.com;
+   	server_name example.com;
    	root /usr/share/nginx/html;
    
    	error_log /var/log/nginx/myServers.error.log info;
@@ -122,28 +122,43 @@
    ```
 
 10. Go to *Windows_Jump_Host* and login using the below credentials:
+
     - Username: **user**
     - Password: **user**
 
-11. Test the configuration in *IE* (yes, I know... 🤦🏻‍♂️) by entering the below Load balancer **FQDN**. Use *New Incognito window*: 
+11. Please update the hosts file:
+
+    ![example-com-hosts.png](./img/02_lab/example-com-hosts.png)
+
+    ![example-com-hosts-cmd.png](./img/02_lab/example-com-cmd.png)
+
+    add example.com domain:
 
     ```
-    http://meta.com
+    10.1.1.9 www.example.com example.com
+    ```
+
+    Save the file.
+
+12. Test the configuration in *Chrome* by entering the below Load balancer **FQDN**.
+
+    ```
+    http://example.com
     ```
 
     or use `curl` in <kbd>cmd</kbd>:
 
     ```
-    curl meta.com
+    curl example.com
     ```
 
-12. Keep on refreshing the page, you should observe the default weighted round robin behavior. You should see **server1**, **server2** and **server3** as below:
+13. Keep on refreshing the page, you should observe the default weighted round robin behavior. You should see **server1**, **server2** and **server3** as below:
 
-    ![02_lab-ie-server1](./img/02_lab-ie-server1.png)
+![chrome-example-com](./img/02_lab/chrome-example-com.png)
 
-    ![02_lab-cmd-curl](./img/02_lab-cmd-curl.png)
+![curl-example-com](./img/02_lab/curl-example-com.png)
 
-    
+
 
 ## 1.2 HTTPs Load Balancing
 
@@ -157,7 +172,7 @@
 2. Enter the values requested by openssl for ssl. For **FQDN** enter: 
 
    ```
-   www.meta.com
+   www.example.com
    ```
 
 3. Create a new ﬁle called **https.conf**:
@@ -169,18 +184,18 @@
 4. Add the below configuration to it:
 
    ```nginx
-   # www.meta.com HTTP Only Redirect
+   # www.example.com HTTP Only Redirect
    server {
    	listen 80;
-     server_name www.meta.com;
+     server_name www.example.com;
      
      return 301 https://$host$request_uri;
    }
    
-   # www.meta.com HTTPS
+   # www.example.com HTTPS
    server {
    	listen 443 ssl default_server;
-     server_name www.meta.com;
+     server_name www.example.com;
      
      # Minimum SSL Configuration
      ssl_certificate /etc/ssl/nginx/nginx1.crt;
@@ -202,67 +217,61 @@
    >
    > In the second server context, HTTPs will be processed.
    >
-   > HTTPs requests will be proxied to myServers upstream, which has already been created and used for meta.com load balancing.
+   > HTTPs requests will be proxied to myServers upstream, which has already been created and used for example.com load balancing.
 
-6. Test the configuration in chrome by entering the below Load balancer FQDN. Use *New Incognito window*  in **Chrome**.
+6. Test the configuration in *Chrome* by entering the below Load balancer FQDN.
 
    ```
-   http://www.meta.com/
+   http://www.example.com/
    ```
 
-   > You should be redirected to https://www.meta.com and then load balanced to one of the web servers.
+   > You should be redirected to https://www.example.com and then load balanced to one of the web servers.
 
 7. Test the configuration in chrome by entering the below Load balancer FQDN.
 
    ```
-   https://www.meta.com/
+   https://www.example.com/
    ```
 
-8. Keep on refreshing the page, you should observe the **default weighted round robin behavior**. You should see **server1**, **server2** and **server3** as below:
+8. Keep on refreshing the page, you should observe the **default weighted round robin behavior**. You should see **Server 1**, **Server 2** and **Server 3** as below:
 
-![Graphical user interface, text, application, email  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image005.png)
-
- 
-
- 
-
-![Graphical user interface, text, application  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image006.png)
-
-![Graphical user interface, application  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image007.png)
-
- 
+![chrome-example-com-https](./img/02_lab/chrome-example-com-https.png)
 
 You are done with the lab!
 
-Optionally, if you want to test changing the deault (round robin) load balancing to (least connections load balancing), you can do that by adding least_conn; under the upstream as below:
-
-$ sudo vi /etc/nginx/conf.d/main.conf
-
- 
-
-upstream myServers {
-
-least_conn;
-
-zone tcp_upstream 64k;
-
-server 10.1.1.10:8080;
-
-server 10.1.1.11:8080; 
-
-server 10.1.1.12:8080;
-
-}
-
-\9.    Save and reload NGINX:
-
-$ sudo nginx -s reload
-
-\10.    Test the configuration in chrome by entering the below Load balancer FQDN.
-
-https://**www.**meta.com/
 
 
+9. Optionally, if you want to test changing the deault (round robin) load balancing to (least connections LB), you can do that by adding `least_conn;` under the upstream as below:
+
+   ```bash
+   sudo vi /etc/nginx/conf.d/main.conf
+   ```
+
+   Edit configuration to:
+
+   ```nginx
+   upstream myServers {
+     least_conn;
+     zone tcp_upstream 64k;
+     server 10.1.1.10:8080;
+     server 10.1.1.11:8080;
+     server 10.1.1.12:8080;
+   }
+   ```
+
+10. Save and reload NGINX:
+
+    ```bash
+    sudo nginx -s reload
+    ```
+
+11. Test the configuration in chrome by entering the below Load balancer FQDN:
+
+    ```
+    https://www.example.com/
+    ```
+
+    
 
 # LAB 2: API & Dashboard Activity Monitoring 
 
@@ -276,463 +285,472 @@ https://**www.**meta.com/
 
  
 
-**2.1**     **API & Dashboard**
+## 2.1 API & Dashboard
 
-\1. Open the main.conf file.
+1. Open the main.conf file:
 
-$ sudo vi /etc/nginx/conf.d/main.conf
+   ```bash
+   sudo vi /etc/nginx/conf.d/main.conf
+   ```
 
-\2. In main.conf create a new preﬁx /api
+2. In **main.conf** create a new preﬁx `/api`:
 
-location /api {
+   ```nginx
+   location /api {
+   	api write=on;
+   }
+   ```
 
-api write=on;
+   > Note: This allows you to write to the NGINX (back ends) configuration using the NGINX API.
 
-}
+3. Add a second preﬁx: `/dashboard` along with a [try_files](http://nginx.org/en/docs/http/ngx_http_core_module.html#try_files) directive that will return **dashboard.html**:
 
-Note: This allows you to write to the NGINX (back ends) configuration using the NGINX API.
+   ```nginx
+   location /dashboard {
+   	try_files $uri $uri.html /dashboard.html;
+   }
+   ```
 
-\3. Add a second preﬁx: /dashboard along with a
+4. Your file should look like the below:
 
-try_files directive that will return dashboard.html:
+   ```nginx
+   upstream myServers {
+       zone http_backend 64k;
+       server 10.1.1.10:8080;
+       server 10.1.1.11:8080;
+       server 10.1.1.12:8080;
+   }
+   
+   server {
+   	listen 80;
+   	server_name example.com;
+   	root /usr/share/nginx/html;
+   
+     error_log /var/log/nginx/myServers.error.log info;
+     access_log /var/log/nginx/myServers.access.log combined;
+   
+   	location / {
+    		proxy_pass http://myServers;
+   	}
+     location /api {
+     	api write=on;
+     }
+   	location /dashboard {
+     	try_files $uri $uri.html /dashboard.html;
+   	}
+   }
+   ```
 
-location /dashboard {
+5. Save, reload NGINX:
 
-try_files $uri $uri.html /dashboard.html;
+   ```bash
+   sudo nginx -s reload 
+   ```
 
-}
+6. Test NGINX dashboard:
 
-\4. Your file should look like the below:
+   ```
+   http://example.com/dashboard
+   ```
 
-![Text  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image008.png)
+   You should see the **NGINX+ dashboard** which shows current connections:
 
-\5. Save, reload NGINX.
+   ![nginx-dashboard1](./img/02_lab/nginx-dashboard1.png)
 
-$ sudo nginx -s reload
+7. Click the **HTTP Upstreams** tab to view the status of the backend servers: ![nginx-dashboard2](./img/02_lab/nginx-dashboard2.png)
+
+8. Click the **Shared Zones** tab to view the status of the memory zone activity:
+
+   ![nginx-dashboard3](./img/02_lab/nginx-dashboard3.png)
+
+9. Click back the **HTTP Upstream** tab. Now let us test upstream backup.
+
+10. Open the **main.conf** file:
+
+    ```bash
+    sudo vi /etc/nginx/conf.d/main.conf
+    ```
+
+11. Mark the third server as **backup**:
+
+    ```nginx
+    10.1.1.12:8080 backup;
+    ```
+
+12. Set up a **health check** that will fail the first primary server. Add a match block in the http context (top of your file) that regards the text “Server-1” as unhealthy:
+
+    ```nginx
+    match health_primary {
+    	body !~ "Server 1";
+    }
+    ```
+
+13. Add the `health_check` match statement to location / block under the **proxy_pass** statement:
+
+    ```nginx
+    ...
+    proxy_pass http://myServers;
+    health_check match=health_primary fails=2;
+    ...
+    ```
+
+14. Your file should look like the below:
+
+    ```nginx
+    match health_primary {
+    	body !~ "Server 1";
+    }
+    
+    upstream myServers {
+    	zone http_backend 64k;
+      server 10.1.1.10:8080;
+      server 10.1.1.11:8080;
+      server 10.1.1.12:8080 backup;
+    }
+    
+    server {
+      listen 80;
+      server_name example.com;
+      root /usr/share/nginx/html;
+    
+      error_log /var/log/nginx/myServers.error.log info;
+      access_log /var/log/nginx/myServers.access.log combined;
+    
+    	location / {
+        proxy_pass http://myServers;
+        health_check match=health_primary fails=2;
+      }
+      location /api {
+        api write=on;
+      }
+      location /dashboard {
+        try_files $uri $uri.html /dashboard.html;
+      }
+    }
+    ```
+
+15. Exit and save the file. Reload NGINX:
+
+    ```bash
+    sudo nginx -s reload
+    ```
+
+16. Test load balancing in *Chrome* browser:
+
+    ```
+    http://example.com/
+    ```
+
+17. Open another *Chrome* tab and go to **NGINX dashboard**. Click on the **HTTP upstream** tab as follows:
+
+    ```
+    http://example.com/dashboard
+    ```
+
+     ![nginx-dashboard4](./img/02_lab/nginx-dashboard4.png)
+
+    
+
+    You should only be load balanced to **Server 2 (10.1.1.11:8080)**. Why?
+
+    - Because **10.1.1.10** is down.
+    - **10.1.1.12** is configured as backup. Notice the small **“b”** next to **10.1.1.12**.
+
+18. Edit **main.conf** file again. Mark the 2nd primary server as **down**:
+
+    ```bash
+    sudo vi /etc/nginx/conf.d/main.conf
+    ```
+
+    ```
+    10.1.1.11:8080 down;
+    ```
+
+19. Save the file and reload NGINX:
+
+    ```bash
+    sudo nginx -s reload
+    ```
+
+20. Test load balancing in your *Chrome* browser. Watch NGINX dashboard. What is the result?
+
+    ```
+    http://example.com/
+    ```
+
+    You should only be load balanced to **Server 3 (10.1.1.12:8080)** -> the backup Server as below:
+
+    ![nginx-dashboard5](./img/02_lab/nginx-dashboard5.png) 
+
+21. Remove “down” and “backup” from myServers upstream for the next labs as follows:
+
+    ```nginx
+    upstream myServers {
+        zone http_backend 64k;
+        server 10.1.1.10:8080;
+        server 10.1.1.11:8080;
+        server 10.1.1.12:8080;
+    }
+    ```
+
+    Also comment out the **health_check** command as follows:
+
+    ```nginx
+    # health_check match=health_primary fails=2;
+    ```
+
+22. Save the file and reload NGINX:
+
+    ```
+    sudo nginx -s reload
+    ```
+
+     
+
+# LAB 3: Session Persistence
+
+ Learning Objectives:
+
+ By the end of the lab you will be able to:
+
+- Configuring sticky cookie persistence
+
+- TCP load balancing
+- TCP health check
 
  
 
-\6. Test NGINX dashboard:
+## 3.1 Sticky Cookie Session Persistence
 
-http://meta.com/dashboard
+1. Open the **main.conf** file:
 
- 
+   ```bash
+   sudo vi /etc/nginx/conf.d/main.conf
+   ```
 
- 
+2. Enable sticky cookie with an expiration of 1 hour:
 
- 
+   ```nginx
+   upstream myServers {
+     zone http_backend 64k;
+     server 10.1.1.10:8080;
+     server 10.1.1.11:8080;
+     server 10.1.1.12:8080;
+     sticky cookie my_cookie expires=1h;
+   }
+   
+   
+   ```
 
- 
+3. Save the file and reload NGINX:
 
- 
+   ```bash
+   sudo nginx -s reload
+   ```
 
- 
+4. Test session persistence in *Chrome* by going to the below URL:
 
- 
+   ```
+   http://example.com/
+   ```
 
-You should see the NGINX+ dashboard which shows current connections:
+5. Keep on refreshing the page. You should see the same backend server all the time.
 
- 
+6. Now open developer tools in chrome. Click the 3 dots in the upper right corner.
 
- 
+   **Choose More Tools > Developer tools**.
 
-![Graphical user interface, application  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image009.png)
+7. Choose the **Application tab**, and then click the arrow next to **Cookies** on the left hand side to expand the view. Click the Load balancer URL below **Cookies**. You should see the hash value of your cookie under **value** heading as below:
 
- 
+   ![persistance](./img/02_lab/persistance.png)
 
-\7. Click the **HTTP Upstreams** tab to view the status of the backend servers:
+8. Remove session persistence by commenting out the sticky cookie directive:
 
- 
+   ```bash
+   sudo vi /etc/nginx/conf.d/main.conf
+   ```
 
-![Graphical user interface  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image010.png)
+   ```nginx
+   # sticky cookie my_cookie expires=1h;
+   ```
 
-\8. Click the Shared Zones tab to view the status of the memory zone activity:
+9. Save the file and reload NGINX:
 
-![Graphical user interface, application, website  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image011.png)
+   ```bash
+   sudo nginx -s reload
+   ```
 
-\9. Click back the **HTTP Upstream** tab
-
-Now let us test upstream backup
-
-\10.   Open the main.conf file.
-
-$ sudo vi /etc/nginx/conf.d/main.conf
-
-\11.   Mark the third server as “**backup”**
-
-10.1.1.12:8080 backup;
-
- 
-
-\12.   Set up a health check that will fail the first primary server. Add a match block in the http context (top of your file) that regards the text “Server-1” as unhealthy.
-
-match health_primary {
-
-body !~ "Server 1";
-
-} 
-
-\13.   Add the health_check match statement to location / block under the proxy_pass statement
-
-proxy_pass http://myServers;
-
-health_check match=health_primary fails=2;
+10. Test accessing http://example.com. Keep on refreshing. You should see load balancing between the 3 web servers. 
 
  
 
- 
+## 3.2 TCP Load balancing
 
-\14.   Your file should look like the below:
+1. Open the global nginx conﬁguration ﬁle (**/etc/nginx/nginx.conf**):
 
- 
+   ```bash
+   sudo vi /etc/nginx/nginx.conf
+   ```
 
-![Text  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image012.png)
+2. Add the following below the **http context**:
 
- 
+   ```nginx
+   stream {
+   	include /etc/nginx/tcp/*.conf;
+   }
+   ```
 
-\15.   Exit and save the file. Reload NGINX.
+   > This tells NGINX to include any configuration file in the tcp directory in its configuration.
 
-$sudo nginx -s reload
+3. Save and reload the configuration:
 
- 
+   ```bash
+   sudo nginx -s reload
+   ```
 
-\16.   Test load balancing in chrome browser.
+4. Create a tcp directory. Then add the a new conf ﬁle called **tcp_lb.conf**:
 
-http://meta.com/
+   ```bash
+   sudo mkdir -p /etc/nginx/tcp
+   sudo vi /etc/nginx/tcp/tcp_lb.conf 
+   ```
+
+5. Create an upstream called **tcp_backend**, the following memory zone tcp_upstream 64k, and place the three web servers in your upstream:
+
+   ```nginx
+   upstream tcp_backend {
+     zone tcp_upstream 64k;
+     server 10.1.1.10:8080;
+     server 10.1.1.11:8080;
+     server 10.1.1.12:8080;
+   }
+   ```
+
+6. Create a server that listens on port **8080** and proxies to upstream **tcp_backend**:
+
+   ```nginx
+   server {
+     listen 8080;
+     proxy_pass tcp_backend;
+   }
+   ```
 
-\17.   Open another chrome tab and go to NGINX dashboard. click on the HTTP upstream tab as follows:
+   Your file needs to look like the below:
 
-http://meta.com/dashboard
+   ```nginx
+   upstream tcp_backend {
+     zone tcp_upstream 64k;
+     server 10.1.1.10:8080;
+     server 10.1.1.11:8080;
+     server 10.1.1.12:8080;
+   }
+   
+   server {
+     listen 8080;
+     proxy_pass tcp_backend;
+   }
+   ```
 
- 
+7. Save the file and reload NGINX:
 
-![Application  Description automatically generated with medium confidence](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image013.png)
+   ```bash
+   sudo nginx -s reload
+   ```
 
-You should only be load balanced to Server 2(10.1.1.11:8080). Why?
+8. View the **dashboard** and click on **TCP/UDP upstreams** tab:
 
-Because 10.1.1.10 is down.
+   ![tcp-upstreams](./img/02_lab/tcp-upstreams.png)
 
-& 10.1.1.12 is configured as backup. Notice the small **“b”** **next to 10.1.1.12.**
+   You should see a new tab titled “TCP/UDP Upstreams”.
 
- 
+9. Test TCP load balancing by using the following command multiple times. Watch the dashbboard:
 
-\18.   Edit main.conf file again. Mark the 2nd primary server as **“down”.**
+   ```bash
+   telnet 10.1.1.9 8080
+   ```
 
-$ sudo vi /etc/nginx/conf.d/main.conf
+   ![tcp-upstreams-connections](./img/02_lab/tcp-upstreams-connections.png)You should see the connections load balanced between all 3 servers.
 
- 
+## 3.3 TCP Health Check
 
-10.1.1.11:8080 down;
+1. Open **tcp_lb.conf** configuration file:
 
- 
+   ```bash
+   sudo vi /etc/nginx/tcp/tcp_lb.conf
+   ```
 
-\19.   Save the file and reload NGINX.
+2. Add a match block using **GET** request to confirm the TCP connection. Add the configuration in the HTTP context (at the top of the file):
 
-$ sudo nginx -s reload
-
- 
-
-\20.   Test load balancing in your chrome browser. Watch NGINX dashboard. What is the result?
-
-http://meta.com/
-
- 
-
-You should only be load balanced to Server 3(10.1.1.12:8080)  the backup Server as below:
-
-![Graphical user interface, application, table  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image014.png)
-
- 
-
-\21.   Remove “down” and “backup” from myServers upstream for the next labs as follows:
-
-![Text  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image015.png)
-
-Also comment out the health_check command as follows:
-
-\#health_check match=health_primary fails=2;
-
-\22.   Save the file and reload NGINX.
-
-$ sudo nginx -s reload
-
-​            **That is end of Day 2 labs!**
-
-![Stop Sign - Playground Markings Direct](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image016.png)
-
- 
-
- 
-
-**LAB 2: Session Persistence** 
-
- 
-
-Learning Objectives:
-
- 
-
-By the end of the lab you will be able to:
-
-·   Configuring sticky cookie persistence
-
-·   TCP load balancing
-
-·   TCP health check
-
- 
-
-**2.1**     **Sticky Cookie Session Persistence**
-
-\1.   Open the main.conf file.
-
-$ sudo vi /etc/nginx/conf.d/main.conf
-
-\2.   Enable sticky cookie with an expiration of 1 hour.
-
-upstream myServers {
- zone http_backend 64k;
- server 10.1.1.10:8080;
- server 10.1.1.11:8080;
- server 10.1.1.12:8080;
- **sticky cookie my_cookie expires=1h;**
-
-**}** 
-
- 
-
-\3.   Save the file and reload NGINX.
-
-$ sudo nginx -s reload
-
- 
-
-\4.   Test session persistence in chrome by going to the below URL:
-
-http://meta.com/
-
-\5.   Keep on refreshing the page. You should see the same backend server all the time.
-
- 
-
-\6.   Now open developer tools in chrome. Click the 3 dots in the upper right corner. **Choose More Tools > Developer tools**.
-
- 
-
-\7.   Choose the Application tab, and then click the arrow next to **Cookies** on the left hand side to expand the view. Click the Load balancer URL below **Cookies**. You should see the hash value of your cookie under **value** heading as below:
-
-![Graphical user interface, text, application, email  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image017.png)
-
- 
-
-\8.   Remove session persistence by commenting out the sticky cookie directive.
-
-$sudo vi /etc/nginx/conf.d/main.conf
-
-\#sticky cookie my_cookie expires=1h;
-
- 
-
-\9.   Save the file and reload NGINX.
-
-$ sudo nginx -s reload
-
-\10.   Test accessing http://meta.com. Keep on refreshing. You should see load balancing between the 3 web servers. 
-
- 
-
- 
-
- 
-
-**2.2**     **TCP Load balancing**
-
- 
-
-\1.   Open the global nginx conﬁguration ﬁle (/etc/nginx/nginx.conf)
-
-$ sudo vi /etc/nginx/nginx.conf
-
-\2.   Add the following below the http context:
-
-stream {
-
-include /etc/nginx/tcp/*.conf;
-
-}
-
-*This tells NGINX to include any configuration file in the tcp” directory in its configuration.*
-
-\3.       Save and reload the configuration.
-
-$ sudo nginx -s reload
-
- 
-
-\4.       Create a tcp directory. Then add the a new conf ﬁle called tcp_lb.conf:
-
-$sudo mkdir -p /etc/nginx/tcp
-
-$sudo vi /etc/nginx/tcp/tcp_lb.conf
-
- 
-
-\5.       Create an upstream called tcp_backend, the following memory zone tcp_upstream 64k, and place the three web servers in your upstream:
-
-upstream tcp_backend { 
-
-zone tcp_upstream 64k;
-
-server 10.1.1.10:8080;
-
-server 10.1.1.11:8080; 
-
-server 10.1.1.12:8080;
-
-}
-
-\6.       Create a server that listens on port 8080 and proxies to
-
-upstream     tcp_backend
-
-server {
-
-listen 8080;
-
-proxy_pass tcp_backend;
-
-}
-
- 
-
-Your file needs to look like the below:
-
-![Text  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image018.png)
-
-\7.       Save the file and reload NGINX.
-
-$ sudo nginx -s reload
-
-\8.       View the dashboard and click on TCP/UDP upstreams tab:
-
-http://meta.com/dashboard.html
-
- 
-
-![Graphical user interface, application  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image019.png)
-
-You should see a new tab titled “TCP/UDP Upstreams”.
-
-\9.       Test TCP load balancing by using the following command multiple times. Watch the dashbboard:
-
-$ [telnet](http://meta.com/dashboard.html) 10.1.1.9 8080
-
-![Graphical user interface, application  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image020.png)
-
-You should see the connections load balanced between all 3 servers.
-
- 
-
- 
-
- 
-
- 
-
-**2.3**     **TCP Health Check**
-
-\1.   Open tcp_lb.conf configuration file.
-
-$sudo vi /etc/nginx/tcp/tcp_lb.conf
-
-\2.   Add a match block using **GET** request to confirm the TCP connection. Add the configuration in the HTTP context ( at the top of the file).
-
-match tcp {
-
-send "GET / HTTP/1.0\r\nHost: localhost:8080\r\n\r\n";
-
-  expect ~* "300";
-
-}
-
- 
-
-match tcp {
-
-​     send "GET / HTTP/1.0\r\nHost: localhost:8080\r\n\r\n";
-
- 
-
-​     expect ~* “300”;
-
-} 
-
- 
-
-\3.   Add a health check statement to the server block under the proxy_pass statement. This check sets up an interval of 10 seconds between health checks, sets failure to 1 and passes to 3. It also references the match block configured in step 2.
-
- 
-
-server {
-
-listen 8080;
-
-proxy_pass tcp_backend;
-
-health_check interval=10 passes=3 fails=1 match=tcp;
-
-}
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-
-Your file should look like the below one:
-
-![Graphical user interface, text, letter  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image021.png)
-
-\4.   Save the file and reload NGINX.
-
-$ sudo nginx -s reload
-
- 
-
-\5.   This should cause your health check to fail.
-
- 
-
- 
-
-![Graphical user interface  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image022.png)
-
-\6.   Open the tcp_lb.conf file .
-
-$sudo vi /etc/nginx/tcp/tcp_lb.conf
-
-\7.   Change 300 to 200 as follows:
-
-match tcp {
-
-send "GET / HTTP/1.0\r\nHost: localhost:8080\r\n\r\n";
-
-  expect ~* "200";
-
-}
-
-\8.   Save the file and reload NGINX. This casuse the health check to pass.
-
-$ sudo nginx -s reload
-
- 
-
-![A picture containing application  Description automatically generated](/Users/klokner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Coding/nginx/training-nginx-02H/img/02_lab/clip_image023.png)
-
- 
+   ```nginx
+   match tcp {
+   	send "GET / HTTP/1.0\r\nHost: localhost:8080\r\n\r\n";
+     expect ~* "300";
+   } 
+   ```
+
+3. Add a **health check** statement to the server block under the proxy_pass statement. This check sets up an interval of 10 seconds between health checks, sets failure to 1 and passes to 3. It also references the match block configured in step 2:
+
+   ```nginx
+   server {
+     listen 8080;
+     proxy_pass tcp_backend;
+     health_check interval=10 passes=3 fails=1 match=tcp;
+   }
+   ```
+
+   Your file should look like the below one:
+
+   ```nginx
+   match tcp {
+     send "GET / HTTP/1.0\r\nHost: localhost:8080\r\n\r\n";
+     expect ~* "300";
+   }
+   
+   upstream tcp_backend {
+     zone tcp_upstream 64k;
+     server 10.1.1.10:8080;
+     server 10.1.1.11:8080;
+     server 10.1.1.12:8080;
+   }
+   
+   server {
+     listen 8080;
+     proxy_pass tcp_backend;
+     health_check interval=10 passes=3 fails=1 match=tcp;
+   }
+   ```
+
+4. Save the file and reload NGINX:
+
+   ```bash
+   sudo nginx -s reload
+   ```
+
+5. This should cause your health check to fail.
+
+   ![tcp-upstreams-failed](./img/02_lab/tcp-upstreams-failed.png)
+
+6. Open the **tcp_lb.conf** file:
+
+   ```bash
+   sudo vi /etc/nginx/tcp/tcp_lb.conf
+   ```
+
+7. Change 300 to 200 as follows:
+
+   ```nginx
+   match tcp {
+     send "GET / HTTP/1.0\r\nHost: localhost:8080\r\n\r\n";
+     expect ~* "200";
+   }
+   ```
+
+8. Save the file and reload NGINX:
+
+   ```bash
+   sudo nginx -s reload
+   ```
+
+   This casuse the health check to pass:
+
+   ![tcp-connection-passed](img/02_lab/tcp-connection-passed.png)
