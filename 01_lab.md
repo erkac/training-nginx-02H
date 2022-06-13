@@ -1,18 +1,13 @@
 # LAB 1: NGINX/NGINX+ and dynamic modules Installation
 
->  Learning Objectives:
->
-> 
->
-> By the end of the lab you will be able to:
->
-> ·   Install NGINX open source
->
-> ·   Install NGINX plus
->
-> ·   Interact with NGINX configuration files
->
-> ·   Install dynamic modules
+Learning Objectives:
+
+By the end of the lab you will be able to:
+
+- Install NGINX open source
+- Install NGINX plus
+- Interact with NGINX configuration files
+- Install dynamic modules
 
  
 
@@ -331,19 +326,19 @@ NGINX Plus functionality can be extended with dynamically loadable modules that 
 
  # LAB 2: Reverse Proxy & Web Server configuration 
 
->  Learning Objectives:
->
-> By the end of the lab you will be able to:
->
-> - Configure NGINX as a web server
-> - Configure NGINX as a reverse proxy
-> - Configure SSL traffic processing
+Learning Objectives:
+
+By the end of the lab you will be able to:
+
+- Configure NGINX as a web server
+- Configure NGINX as a reverse proxy
+- Configure SSL traffic processing
 
  
 
 ## 2.1 Web Server Setup
 
-1. Access *Web_Server_1*.
+1. Access *Web_Server_1* using *SSH*.
 
 2. Create an html page as **app1.html**:
 
@@ -479,9 +474,7 @@ NGINX Plus functionality can be extended with dynamically loadable modules that 
 
     *You should get the below pages:*
 
-![Icon  Description automatically generated with low confidence](file:////Users/klokner/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image006.png)
-
-![Icon  Description automatically generated](file:////Users/klokner/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image007.png)
+    ![01_lab_app1-app2](./img/01_lab_app1-app2.png)
 
  
 

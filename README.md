@@ -6,6 +6,10 @@ For the Lab environment, please use **02H 2022 - NGINX 101** at [UDF.f5.com](udf
 
 
 
+All the lab's taks can be completed by running relevant scripts from the `./scripts/` directory.
+
+
+
 ## Modules
 
 - [Day 1](./01_lab.md)
