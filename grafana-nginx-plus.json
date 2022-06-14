@@ -140,7 +140,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Total (2[OXX from $pod_name pod) requests",
+      "title": "Total (2XX from $pod_name pod) requests",
       "type": "stat"
     },
     {
@@ -209,7 +209,7 @@
             "steps": [
               {
                 "color": "orange",
-                [I"value": null
+                "value": null
               }
             ]
           }
@@ -217,7 +217,7 @@
         "overrides": []
       },
       "gridPos": {
-       [O "h": 5,
+        "h": 5,
         "w": 6,
         "x": 12,
         "y": 6
