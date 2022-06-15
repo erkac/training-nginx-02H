@@ -184,7 +184,7 @@
             "mean"
           ]
         },
-        "graphMo[Ode": "none",
+        "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
@@ -513,7 +513,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                 [I   "color": "rgb(0, 150, 57)",
+                    "color": "rgb(0, 150, 57)",
                     "value": null
                   }
                 ]
@@ -1922,4 +1922,3 @@
   "uid": "VUwGrLVMz",
   "version": 5
 }
-
