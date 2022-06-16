@@ -249,3 +249,6 @@ A quick demo to see & feel the DevOps tools.
 
    ![grafana-dashboard-edit](img/03_lab/grafana-dashboard-edit.png)
 
+
+
+There is also `nginx-plus-module-prometheus` module which can be used instead of `prometheus-nginx-exporter`: [How to Visualize NGINX Plus with Prometheus and Grafana](https://www.nginx.com/blog/how-to-visualize-nginx-plus-with-prometheus-and-grafana/).
