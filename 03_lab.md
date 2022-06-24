@@ -38,7 +38,37 @@ A quick demo to see & feel the DevOps tools.
 
    Press <kbd>q</kbd> to quit the listing.
 
-3. Download and configure **nginx-prometheus-exporter**:
+3. Configure dedicated listener for **prometheus-nginx-exporter**:
+
+   ```bash
+   sudo vi /etc/nginx/conf.d/stats.conf
+   ```
+
+   add the following configuration:
+
+   ```nginx
+   server {
+   	listen 8081;
+   	location /api {
+   		api write=on;
+   		allow 127.0.0.1;
+   		deny all;
+   	}
+   	location /dashboard {
+   		try_files $uri $uri.html /dashboard.html;
+   		allow 127.0.0.1;
+   		deny all;
+   	}
+   }
+   ```
+
+   Reload NGINX:
+
+   ```bash
+   sudo nginx -s reload
+   ```
+
+4. Download and configure **nginx-prometheus-exporter**:
 
    ```bash
    sudo apt install -y prometheus-nginx-exporter
@@ -67,37 +97,7 @@ A quick demo to see & feel the DevOps tools.
 
    Press <kbd>q</kbd> to quit the listing.
 
-4. Configure dedicated listener for prometheus-nginx-exporter:
-
-   ```bash
-   sudo vi /etc/nginx/conf.d/stats.conf
-   ```
-   
-   add the following configuration:
-   
-   ```nginx
-   server {
-   	listen 8081;
-   	location /api {
-   		api write=on;
-   		allow 127.0.0.1;
-   		deny all;
-   	}
-   	location /dashboard {
-   		try_files $uri $uri.html /dashboard.html;
-   		allow 127.0.0.1;
-   		deny all;
-   	}
-   }
-   ```
-
-   Reload NGINX:
-
-   ```bash
-   sudo nginx -s reload
-   ```
-
-2. Install traffic generator and generate some load:
+5. Install traffic generator and generate some load:
 
    ```bash
    sudo apt install -y hey
@@ -106,7 +106,7 @@ A quick demo to see & feel the DevOps tools.
    hey -z 5m https://10.1.1.9/
    ```
 
-3. See the results in Prometheus.
+6. See the results in Prometheus.
 
    Use Chrome to visit:
 
@@ -115,19 +115,19 @@ A quick demo to see & feel the DevOps tools.
    ```
 
    Then click Graph in the menu and Grpah under the Execute command:
-   
+
    ![prometheus](./img/03_lab/prometheus.png)
-   
+
    In the Expression.. field, start typing: `nginxplus_`
-   
+
    ![prometheus-execute](img/03_lab/prometheus-execute.png)
-   
+
    Choose some of those metrics and click Execute.
+
    
-   
-   
+
    You can test and play with more complex queries:
-   
+
    ```
    # basic metric
    nginxplus_http_requests_total
@@ -139,15 +139,15 @@ A quick demo to see & feel the DevOps tools.
    # number of connections in 1m segment
    rate(nginxplus_connections_accepted[1m])
    ```
-   
+
    Modify the NGINX config:
-   
+
    ```bash
    sudo vim /etc/nginx/conf.d/main.conf
    ```
-   
+
    add weight options:
-   
+
    ```nginx
    upstream myServers {
        zone http_backend 64k;
@@ -157,32 +157,32 @@ A quick demo to see & feel the DevOps tools.
        sticky cookie my_cookie expires=1h;
    }
    ```
-   
+
    Reload NGINX:
-   
+
    ```bash
    sudo nginx -s reload
    ```
-   
+
    Generate some more load:
-   
+
    ```bash
    hey -z 5m https://10.1.1.9/
    ```
-   
+
    use this query:
-   
+
    ```
    # all the requests
    nginxplus_upstream_server_requests
    # per server in time
    sum(rate(nginxplus_upstream_server_requests[1m])) by (server)
    ```
-   
+
    Check Prometheus:
-   
+
    ![CleanShot 2022-06-15 at 14.47.24@2x](img/03_lab/prometheus-graphs.png)
-   
+
    > You can find lot of examples online.
 
 
