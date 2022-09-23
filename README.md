@@ -11,7 +11,7 @@ For the Lab environment, please use **02H 2022 - NGINX 101** at [UDF.f5.com](udf
 
 TODO:
 
-- [ ] All the lab's taks can be completed by running relevant scripts from the `./scripts/` directory.
+- [ ] All the lab's tasks can be completed by running relevant scripts from the `./scripts/` directory.
 
 
 
