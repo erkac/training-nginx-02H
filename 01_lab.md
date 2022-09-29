@@ -115,13 +115,18 @@ By the end of the lab you will be able to:
 
 1. Go to *Web_Server_1* and select *SSH* from Access menu.
 
-2. Check NGINX repo cert and key are in **/home/ubuntu**:
+2. Check NGINX repo cert and key are in **/home/ubuntu** and validity of the certificate:
 
    ```bash
+   cd /home/ubuntu
    $ pwd
    /home/ubuntu
    $ ls
    nginx-repo.crt  nginx-repo.key
+   ```
+
+   ```bash
+   openssl x509 -in nginx-repo.crt -text -noout
    ```
 
 3. Create the **/etc/ssl/nginx** directory:
@@ -133,7 +138,7 @@ By the end of the lab you will be able to:
 4. Copy the files to the **/etc/ssl/nginx/** directory:
 
    ```bash
-   cd 
+   cd /home/ubuntu
    sudo cp nginx-repo.crt /etc/ssl/nginx/
    sudo cp nginx-repo.key /etc/ssl/nginx/
    cd /etc/ssl/nginx
@@ -143,6 +148,7 @@ By the end of the lab you will be able to:
 5. Download and add [NGINX signing key](https://nginx.org/keys/nginx_signing.key):
 
    ```bash
+   cd /home/ubuntu
    sudo wget https://cs.nginx.com/static/keys/nginx_signing.key \
      && sudo apt-key add nginx_signing.key
    ```
