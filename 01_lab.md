@@ -129,6 +129,16 @@ By the end of the lab you will be able to:
    openssl x509 -in nginx-repo.crt -text -noout
    ```
 
+  The nginx repo crtificate should be still valid:
+   ```
+   ...
+   Validity
+            Not Before: Aug 25 14:46:03 2022 GMT
+            Not After : Feb 21 14:46:03 2023 GMT
+   ...
+   ```
+   If the certificate is not valid, please follow the guidance from the UDF Lab.
+
 3. Create the **/etc/ssl/nginx** directory:
 
    ```bash
