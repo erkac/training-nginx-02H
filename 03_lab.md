@@ -252,3 +252,6 @@ A quick demo to see & feel the DevOps tools.
    ![grafana-dashboard-edit](img/03_lab/grafana-dashboard-edit.png)
 
 
+
+This concludes Monitoring Lab.
+

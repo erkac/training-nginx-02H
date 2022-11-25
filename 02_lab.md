@@ -227,7 +227,7 @@
 
    > You should be redirected to https://www.example.com and then load balanced to one of the web servers.
 
-7. Test the configuration in chrome by entering the below Load balancer FQDN.
+7. Test the configuration in *Chrome* by entering the below Load balancer FQDN.
 
    ```
    https://www.example.com/
@@ -252,7 +252,7 @@ You are done with the lab!
    ```nginx
    upstream myServers {
      least_conn;
-     zone tcp_upstream 64k;
+     zone http_backend 64k;
      server 10.1.1.10:8080;
      server 10.1.1.11:8080;
      server 10.1.1.12:8080;
@@ -265,7 +265,7 @@ You are done with the lab!
     sudo nginx -s reload
     ```
 
-11. Test the configuration in chrome by entering the below Load balancer FQDN:
+11. Test the configuration in *Chrome* by entering the below Load balancer FQDN:
 
     ```
     https://www.example.com/
@@ -287,13 +287,13 @@ You are done with the lab!
 
 ## 2.1 API & Dashboard
 
-1. Open the main.conf file:
+1. Open the **main.conf** file:
 
    ```bash
    sudo vi /etc/nginx/conf.d/main.conf
    ```
 
-2. In **main.conf** create a new preﬁx `/api`:
+2. In **main.conf** create a new location `/api` in the `example.com` `server {}` block:
 
    ```nginx
    location /api {
@@ -315,6 +315,7 @@ You are done with the lab!
 
    ```nginx
    upstream myServers {
+     	least_conn;
        zone http_backend 64k;
        server 10.1.1.10:8080;
        server 10.1.1.11:8080;
@@ -339,6 +340,9 @@ You are done with the lab!
      	try_files $uri $uri.html /dashboard.html;
    	}
    }
+   
+   # www.example.com HTTP Only Redirect
+   ...
    ```
 
 5. Save, reload NGINX:
@@ -402,6 +406,7 @@ You are done with the lab!
     }
     
     upstream myServers {
+      least_conn;
     	zone http_backend 64k;
       server 10.1.1.10:8080;
       server 10.1.1.11:8080;
@@ -427,6 +432,9 @@ You are done with the lab!
         try_files $uri $uri.html /dashboard.html;
       }
     }
+    
+    # www.example.com HTTP Only Redirect
+    ...
     ```
 
 15. Exit and save the file. Reload NGINX:
@@ -532,6 +540,7 @@ You are done with the lab!
 
    ```nginx
    upstream myServers {
+     least_conn;
      zone http_backend 64k;
      server 10.1.1.10:8080;
      server 10.1.1.11:8080;
@@ -556,7 +565,7 @@ You are done with the lab!
 
 5. Keep on refreshing the page. You should see the same backend server all the time.
 
-6. Now open developer tools in chrome. Click the 3 dots in the upper right corner.
+6. Now open developer tools in *Chrome*. Click the 3 dots in the upper right corner.
 
    **Choose More Tools > Developer tools**.
 
@@ -586,7 +595,7 @@ You are done with the lab!
 
 ## 3.2 TCP Load balancing
 
-1. Open the global nginx conﬁguration ﬁle (**/etc/nginx/nginx.conf**):
+1. Open the **global nginx conﬁguration** ﬁle (**/etc/nginx/nginx.conf**):
 
    ```bash
    sudo vi /etc/nginx/nginx.conf
@@ -601,6 +610,48 @@ You are done with the lab!
    ```
 
    > This tells NGINX to include any configuration file in the tcp directory in its configuration.
+
+   Your file should look like the below:
+
+   ```nginx
+   user  nginx;
+   worker_processes  auto;
+   
+   error_log  /var/log/nginx/error.log notice;
+   pid        /var/run/nginx.pid;
+   
+   
+   events {
+     worker_connections  1024;
+   }
+   
+   
+   http {
+     include       /etc/nginx/mime.types;
+     default_type  application/octet-stream;
+   
+     log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+       '$status $body_bytes_sent "$http_referer" '
+       '"$http_user_agent" "$http_x_forwarded_for"';
+   
+     access_log  /var/log/nginx/access.log  main;
+   
+     sendfile        on;
+     #tcp_nopush     on;
+   
+     keepalive_timeout  65;
+   
+     #gzip  on;
+     include /etc/nginx/conf.d/*.conf;
+   }
+   
+   stream {
+   	include /etc/nginx/tcp/*.conf;
+   }
+   ...
+   ```
+
+   
 
 3. Save and reload the configuration:
 
@@ -663,7 +714,7 @@ You are done with the lab!
 
    You should see a new tab titled “TCP/UDP Upstreams”.
 
-9. Test TCP load balancing by using the following command multiple times. Watch the dashbboard:
+9. From the *Windows_Jump_Host* test  TCP load balancing by using the `telnet` command multiple times. Watch the dashbboard:
 
    ```bash
    telnet 10.1.1.9 8080
@@ -754,3 +805,7 @@ You are done with the lab!
    This casuse the health check to pass:
 
    ![tcp-connection-passed](img/02_lab/tcp-connection-passed.png)
+
+
+
+This concludes Intermediate Lab.

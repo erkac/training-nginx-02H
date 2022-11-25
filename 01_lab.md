@@ -637,4 +637,6 @@ By the end of the lab you will be able to:
    
    
 
-That is the end of Lab 2 and 101 Labs!
+
+
+This concludes Beginner Lab.
