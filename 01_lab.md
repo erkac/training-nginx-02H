@@ -133,11 +133,11 @@ By the end of the lab you will be able to:
    ```
    ...
    Validity
-            Not Before: Aug 25 14:46:03 2022 GMT
-            Not After : Feb 21 14:46:03 2023 GMT
+            Not Before: Mar 17 10:40:03 2023 GMT
+            Not After : Sep 13 10:40:03 2023 GMT
    ...
    ```
-   If the certificate is not valid, please follow the guidance from the UDF Lab.
+If the certificate is not valid, please follow the guidance in the UDF Lab Documentation tab.
 
 3. Create the **/etc/ssl/nginx** directory:
 
