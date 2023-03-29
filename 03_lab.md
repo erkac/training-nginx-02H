@@ -115,14 +115,12 @@ A quick demo to see & feel the DevOps tools.
 
    > In this lab we are using nginx-prometheus-exporter, there is also `nginx-plus-module-prometheus` module which can be used instead of prometheus-nginx-exporter: [How to Visualize NGINX Plus with Prometheus and Grafana](https://www.nginx.com/blog/how-to-visualize-nginx-plus-with-prometheus-and-grafana/).
 
-6. See the results in Prometheus.
-
-   Use Chrome to visit:
+6. See the results in Prometheus. Use *Chrome* to visit:
 
    ```
    http://10.1.1.9:9090/
    ```
-
+   
    Then click Graph in the menu and Grpah under the Execute command:
 
    ![prometheus](./img/03_lab/prometheus.png)
@@ -148,13 +146,13 @@ A quick demo to see & feel the DevOps tools.
    # number of connections in 1m segment
    rate(nginxplus_connections_accepted[1m])
    ```
-
+   
    Modify the NGINX config:
 
    ```bash
    sudo vim /etc/nginx/conf.d/main.conf
    ```
-
+   
    add weight options:
 
    ```nginx
@@ -166,19 +164,19 @@ A quick demo to see & feel the DevOps tools.
        sticky cookie my_cookie expires=1h;
    }
    ```
-
+   
    Reload NGINX:
 
    ```bash
    sudo nginx -s reload
    ```
-
+   
    Generate some more load:
 
    ```bash
    hey -z 5m https://10.1.1.9/
    ```
-
+   
    use this query:
 
    ```
@@ -187,7 +185,7 @@ A quick demo to see & feel the DevOps tools.
    # per server in time
    sum(rate(nginxplus_upstream_server_requests[1m])) by (server)
    ```
-
+   
    Check Prometheus:
 
    ![CleanShot 2022-06-15 at 14.47.24@2x](img/03_lab/prometheus-graphs.png)
@@ -212,6 +210,8 @@ A quick demo to see & feel the DevOps tools.
    ```
 
 2. Use Jumphost and *Chrome* to see **Grafana Dashboard**:
+
+   Please use default credentials to login in: `admin` / `admin` and change the pasword afterwards as instructed by Grafana.
 
    ```
    http://10.1.1.9:3000/
