@@ -8,11 +8,7 @@
 
 - Configuring load balancing algorithms
 
- 
-
-> Estimanted time: 45min
-
-
+> Estimanted time: 25min
 
 ## 1.1 HTTP Load Balancing Configuration
 
@@ -279,17 +275,15 @@ You are done with the lab!
 
  Learning Objectives:
 
- By the end of the lab you will be able to:
-
 - Configuring API & dashboard
 - Dashboard activity monitoring
 - Changing upstream status
 
- 
+> Estimanted time: 20min
 
 ## 2.1 API & Dashboard
 
-1. Open the **main.conf** file:
+1. Go to *N_Load_Balancer* -> access -> *SSH* and open the **main.conf** file:
 
    ```bash
    sudo vi /etc/nginx/conf.d/main.conf
@@ -342,11 +336,9 @@ You are done with the lab!
      	try_files $uri $uri.html /dashboard.html;
    	}
    }
-   
-   # www.example.com HTTP Only Redirect
    ...
    ```
-
+   
 5. Save, reload NGINX:
 
    ```bash
@@ -521,18 +513,16 @@ You are done with the lab!
 
  Learning Objectives:
 
- By the end of the lab you will be able to:
-
 - Configuring sticky cookie persistence
 
 - TCP load balancing
 - TCP health check
 
- 
+> Estimanted time: 20min
 
 ## 3.1 Sticky Cookie Session Persistence
 
-1. Open the **main.conf** file:
+1. Go to *N_Load_Balancer* -> access -> *SSH* and open the **main.conf** file:
 
    ```bash
    sudo vi /etc/nginx/conf.d/main.conf
@@ -597,7 +587,7 @@ You are done with the lab!
 
 ## 3.2 TCP Load balancing
 
-1. Open the **global nginx conﬁguration** ﬁle (**/etc/nginx/nginx.conf**):
+1. Open the *global nginx conﬁguration* ﬁle (**/etc/nginx/nginx.conf**):
 
    ```bash
    sudo vi /etc/nginx/nginx.conf
@@ -652,8 +642,6 @@ You are done with the lab!
    }
    ...
    ```
-
-   
 
 3. Save and reload the configuration:
 
