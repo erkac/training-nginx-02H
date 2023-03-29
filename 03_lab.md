@@ -13,6 +13,9 @@ A quick demo to see & feel the DevOps tools.
 1. Login to *N_Load_Balancer* using *SSH* and install **Prometheus**:
 
    ```bash
+   sudo apt update
+   # please ignore the errors about https://pkgs.nginx.com/ repository
+   
    sudo apt install -y prometheus
    systemctl status prometheus
    ```
