@@ -4,6 +4,10 @@ A quick demo to see & feel the DevOps tools.
 
 
 
+> Estimated time: 30min
+
+
+
 ## LAB 1: Prometheus
 
 1. Login to *N_Load_Balancer* using *SSH* and install **Prometheus**:
@@ -253,5 +257,5 @@ A quick demo to see & feel the DevOps tools.
 
 
 
-This concludes Monitoring Lab.
+This concludes the Monitoring Lab.
 

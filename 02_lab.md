@@ -2,8 +2,6 @@
 
  Learning Objectives:
 
- By the end of the lab you will be able to:
-
 - Configure HTTP load balancing
 
 - Configure HTTPs load balancing
@@ -11,6 +9,10 @@
 - Configuring load balancing algorithms
 
  
+
+> Estimanted time: 45min
+
+
 
 ## 1.1 HTTP Load Balancing Configuration
 
@@ -808,4 +810,4 @@ You are done with the lab!
 
 
 
-This concludes Intermediate Lab.
+This concludes the Intermediate Lab.

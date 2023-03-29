@@ -2,14 +2,19 @@
 
 Learning Objectives:
 
-By the end of the lab you will be able to:
-
 - Install NGINX open source
+
 - Install NGINX plus
+
 - Interact with NGINX configuration files
+
 - Install dynamic modules
 
- 
+  
+
+> Estimated time: 30min
+
+
 
 ##  1.1 NGINX Open source - Installing a Prebuilt Debian Package from an OS Repository
 
@@ -639,4 +644,4 @@ By the end of the lab you will be able to:
 
 
 
-This concludes Beginner Lab.
+This concludes the Beginner Lab.
