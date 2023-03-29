@@ -732,7 +732,7 @@ You are done with the lab!
    sudo vi /etc/nginx/tcp/tcp_lb.conf
    ```
 
-2. Add a match block using **GET** request to confirm the TCP connection. Add the configuration in the HTTP context (at the top of the file):
+2. Add a match block using **GET** request to confirm the TCP connection. Add the configuration at the top of the file:
 
    ```nginx
    match tcp {
